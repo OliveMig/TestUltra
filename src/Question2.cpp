@@ -70,7 +70,7 @@ void Question2::find_largest_sum(uint32_t T, const std::vector<uint32_t>& I, std
 	{
 		std::sort(elementsBelowTOver2.begin(), elementsBelowTOver2.end());
 		std::vector<uint32_t> copyElementsBelowTOver2 = elementsBelowTOver2;
-		for (size_t elementsCountBelow = elementsBelowTOver2.size(), iElementBelow = elementsCountBelow - 1; iElementBelow >= 0; --iElementBelow)
+		for (int elementsCountBelow = elementsBelowTOver2.size(), iElementBelow = elementsCountBelow - 1; iElementBelow >= 0; --iElementBelow)
 		{
 			copyElementsBelowTOver2.pop_back();
 			uint32_t elementBelow = elementsBelowTOver2[iElementBelow];
@@ -93,7 +93,7 @@ void Question2::find_largest_sum(uint32_t T, const std::vector<uint32_t>& I, std
 	else
 	{
 		std::sort(elementsAboveTOver2.begin(), elementsAboveTOver2.end());
-		for (size_t elementsCountAbove = elementsAboveTOver2.size(), iElementAbove = elementsCountAbove - 1; iElementAbove >= 0; --iElementAbove)
+		for (int elementsCountAbove = elementsAboveTOver2.size(), iElementAbove = elementsCountAbove - 1; iElementAbove >= 0; --iElementAbove)
 		{
 			uint32_t elementAbove = elementsAboveTOver2[iElementAbove];
 			uint32_t currentSum = 0;
