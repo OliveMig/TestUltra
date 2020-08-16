@@ -30,7 +30,7 @@ bool Question2::split_elements(uint32_t T, const std::vector<uint32_t>& elements
 			}
 			else
 			{
-				hasFoundPivotal = false;
+				hasFoundPivotal = true;
 			}
 		}
 		if (element > pivotal)
