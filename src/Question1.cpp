@@ -1,6 +1,6 @@
 #include "Question1.h"
 
-int add(int a, int b)
+int Question1::add(int a, int b)
 {
     return -1;
 }
