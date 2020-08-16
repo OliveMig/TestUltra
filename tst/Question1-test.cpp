@@ -1,5 +1,6 @@
 #include "gtest/gtest.h"
 #include "Question1.h"
+#include <climits>
 
 TEST(addTest, test) 
 {
