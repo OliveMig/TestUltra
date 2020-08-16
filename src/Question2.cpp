@@ -1,7 +1,7 @@
 #include "Question2.h"
 #include <algorithm>
 
-bool discard_elements_above(uint32_t T, const std::vector<uint32_t>& I, std::vector<uint32_t>& elementsBelowT)
+bool Question2::discard_elements_above(uint32_t T, const std::vector<uint32_t>& I, std::vector<uint32_t>& elementsBelowT)
 {
 	for (size_t iElement = 0, elementsCount = I.size(); iElement < elementsCount; ++iElement)
 	{
@@ -14,7 +14,7 @@ bool discard_elements_above(uint32_t T, const std::vector<uint32_t>& I, std::vec
 	return false;
 }
 
-bool split_elements(uint32_t T, const std::vector<uint32_t>& elements, std::vector<uint32_t>& elementsBelowTOver2, std::vector<uint32_t>& elementsAboveTOver2)
+bool Question2::split_elements(uint32_t T, const std::vector<uint32_t>& elements, std::vector<uint32_t>& elementsBelowTOver2, std::vector<uint32_t>& elementsAboveTOver2)
 {
 	bool isTEven = T%2 == 0;
 	uint32_t pivotal = T/2;
@@ -41,7 +41,7 @@ bool split_elements(uint32_t T, const std::vector<uint32_t>& elements, std::vect
 	return false;
 }
 
-void find_largest_sum(uint32_t T, const std::vector<uint32_t>& I, std::vector<uint32_t>& M, uint32_t& S)
+void Question2::find_largest_sum(uint32_t T, const std::vector<uint32_t>& I, std::vector<uint32_t>& M, uint32_t& S)
 {
 	std::vector<uint32_t> elementsBelowT;
 	std::vector<uint32_t> elementsBelowTOver2;
