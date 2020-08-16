@@ -40,7 +40,7 @@ bool split_elements(uint32_t T, const std::vector<uint32_t>& elements, std::vect
 	return false;
 }
 
-void find_largest_sum(uint32_t T, const std::vector<uint32_t>& I, vector<uint32_t>& M, uint32_t& S)
+void find_largest_sum(uint32_t T, const std::vector<uint32_t>& I, std::vector<uint32_t>& M, uint32_t& S)
 {
 	std::vector<uint32_t> elementsBelowT;
 	std::vector<uint32_t> elementsBelowTOver2;
