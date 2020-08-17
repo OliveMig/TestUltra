@@ -8,7 +8,7 @@ bool Question2::discard_elements_above(uint32_t T, const std::vector<uint32_t>& 
 		uint32_t element = I[iElement];
 		if (element < T)
 			elementsBelowT.emplace_back(element);
-		else if (element == T)
+		else if (element == T) // target value has been found
 			return true;
 	}
 	return false;
@@ -24,7 +24,7 @@ bool Question2::split_elements(uint32_t T, const std::vector<uint32_t>& elements
 		uint32_t element = elements[iElement];
 		if (isTEven && element == pivotal)
 		{
-			if (hasFoundPivotal)
+			if (hasFoundPivotal) // two pivotal values have been found, the target has been reached
 			{
 				return true;
 			}
@@ -41,23 +41,52 @@ bool Question2::split_elements(uint32_t T, const std::vector<uint32_t>& elements
 	return false;
 }
 
+void Question2::find_largest_sum_elements_below(uint32_t T, const std::vector<uint32_t> &I, std::vector<uint32_t> &M, uint32_t &S)
+{
+	std::vector<uint32_t> copyElementsBelowTOver2 = I;
+	std::sort(copyElementsBelowTOver2.begin(), copyElementsBelowTOver2.end());
+	for (int elementsCountBelow = copyElementsBelowTOver2.size(), iElementBelow = elementsCountBelow - 1; iElementBelow >= 0; --iElementBelow)
+	{
+		copyElementsBelowTOver2.pop_back();
+		uint32_t elementBelow = copyElementsBelowTOver2[iElementBelow];
+		uint32_t currentSum = 0;
+		std::vector<uint32_t> currentSumElements;
+		find_largest_sum(T - elementBelow, copyElementsBelowTOver2, currentSumElements, currentSum);
+		currentSum += elementBelow;
+		currentSumElements.emplace_back(elementBelow);
+		if (currentSum > S)
+		{
+			S = currentSum;
+			M = std::move(currentSumElements);
+		}
+		if (currentSum == T)
+		{
+			return;
+		}
+	}
+}
+
 void Question2::find_largest_sum(uint32_t T, const std::vector<uint32_t>& I, std::vector<uint32_t>& M, uint32_t& S)
 {
 	std::vector<uint32_t> elementsBelowT;
 	std::vector<uint32_t> elementsBelowTOver2;
 	std::vector<uint32_t> elementsAboveTOver2;
-	if (discard_elements_above(T, I, elementsBelowT))
+	if (I.empty()) // no elements
+	{
+		S = 0;
+	}
+	else if (discard_elements_above(T, I, elementsBelowT)) // if target is found, target is reached
 	{
 		S = T;
 		M.emplace_back(T);
 	}
-	else if (split_elements(T, elementsBelowT, elementsBelowTOver2, elementsAboveTOver2))
+	else if (split_elements(T, elementsBelowT, elementsBelowTOver2, elementsAboveTOver2)) // if target is even and half is found twice, target is reached
 	{
 		S = T;
 		M.emplace_back(T/2);
 		M.emplace_back(T/2);
 	}
-	else if (elementsBelowTOver2.empty())
+	else if (elementsBelowTOver2.empty()) // if no element below half of the target, then the sum of any element with each other is above the target, so we take the max
 	{
 		auto maxElement = std::max_element(elementsAboveTOver2.begin(), elementsAboveTOver2.end());
 		if (maxElement != elementsAboveTOver2.end())
@@ -66,29 +95,9 @@ void Question2::find_largest_sum(uint32_t T, const std::vector<uint32_t>& I, std
 			M.emplace_back(S);
 		}
 	}
-	else if (elementsAboveTOver2.empty())
+	else if (elementsAboveTOver2.empty()) // if no element 
 	{
-		std::sort(elementsBelowTOver2.begin(), elementsBelowTOver2.end());
-		std::vector<uint32_t> copyElementsBelowTOver2 = elementsBelowTOver2;
-		for (int elementsCountBelow = elementsBelowTOver2.size(), iElementBelow = elementsCountBelow - 1; iElementBelow >= 0; --iElementBelow)
-		{
-			copyElementsBelowTOver2.pop_back();
-			uint32_t elementBelow = elementsBelowTOver2[iElementBelow];
-			uint32_t currentSum = 0;
-			std::vector<uint32_t> currentSumElements;
-			find_largest_sum(T - elementBelow, copyElementsBelowTOver2, currentSumElements, currentSum);
-			currentSum += elementBelow;
-			currentSumElements.emplace_back(elementBelow);
-			if (currentSum > S)
-			{
-				S = currentSum;
-				M = std::move(currentSumElements);
-			}
-			if (currentSum == T)
-			{
-				return;
-			}
-		}
+		find_largest_sum_elements_below(T, elementsBelowTOver2, M, S);
 	}
 	else
 	{
@@ -109,6 +118,16 @@ void Question2::find_largest_sum(uint32_t T, const std::vector<uint32_t>& I, std
 			if (currentSum == T)
 			{
 				return;
+			}
+		}
+		{
+			uint32_t currentSum = 0;
+			std::vector<uint32_t> currentSumElements;
+			find_largest_sum_elements_below(T, elementsBelowTOver2, currentSumElements, currentSum);
+			if (currentSum > S)
+			{
+				S = currentSum;
+				M = std::move(currentSumElements);
 			}
 		}
 	}
