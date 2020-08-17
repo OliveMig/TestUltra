@@ -72,6 +72,17 @@ TEST(split_elements, EvenTwoPivotals)
     EXPECT_TRUE(question2Mock.split_elements(20, elementsStart, elementsBelow, elementsAbove));
 }
 
+TEST(find_largest_sum, Empty)
+{
+    Question2 question2Mock;
+    std::vector<uint32_t> elementsStart;
+    std::vector<uint32_t> elementsSum;
+    uint32_t sumResult = 0;
+    question2Mock.find_largest_sum(0, elementsStart, elementsSum, sumResult);
+    EXPECT_EQ(elementsSum, std::vector<uint32_t>());
+    EXPECT_EQ(sumResult, 0);
+}
+
 TEST(find_largest_sum, LargestIsSumOfElementsBelowHalf)
 {
     Question2 question2Mock;
