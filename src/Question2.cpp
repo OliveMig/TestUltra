@@ -43,27 +43,7 @@ bool Question2::split_elements(uint32_t T, const std::vector<uint32_t>& elements
 
 void Question2::find_largest_sum_elements_below(uint32_t T, const std::vector<uint32_t> &I, std::vector<uint32_t> &M, uint32_t &S)
 {
-	std::vector<uint32_t> copyElementsBelowTOver2 = I;
-	std::sort(copyElementsBelowTOver2.begin(), copyElementsBelowTOver2.end());
-	for (int elementsCountBelow = copyElementsBelowTOver2.size(), iElementBelow = elementsCountBelow - 1; iElementBelow >= 0; --iElementBelow)
-	{
-		copyElementsBelowTOver2.pop_back();
-		uint32_t elementBelow = copyElementsBelowTOver2[iElementBelow];
-		uint32_t currentSum = 0;
-		std::vector<uint32_t> currentSumElements;
-		find_largest_sum(T - elementBelow, copyElementsBelowTOver2, currentSumElements, currentSum);
-		currentSum += elementBelow;
-		currentSumElements.emplace_back(elementBelow);
-		if (currentSum > S)
-		{
-			S = currentSum;
-			M = std::move(currentSumElements);
-		}
-		if (currentSum == T)
-		{
-			return;
-		}
-	}
+
 }
 
 void Question2::find_largest_sum(uint32_t T, const std::vector<uint32_t>& I, std::vector<uint32_t>& M, uint32_t& S)
@@ -86,7 +66,7 @@ void Question2::find_largest_sum(uint32_t T, const std::vector<uint32_t>& I, std
 		M.emplace_back(T/2);
 		M.emplace_back(T/2);
 	}
-	else if (elementsBelowTOver2.empty()) // if no element below half of the target, then the sum of any element with each other is above the target, so we take the max
+	else if (elementsBelowTOver2.empty()) // if no element below half of the target, then any sum of elements is above the target, so we can only take one value, and the largest is the maximum
 	{
 		auto maxElement = std::max_element(elementsAboveTOver2.begin(), elementsAboveTOver2.end());
 		if (maxElement != elementsAboveTOver2.end())
@@ -95,12 +75,9 @@ void Question2::find_largest_sum(uint32_t T, const std::vector<uint32_t>& I, std
 			M.emplace_back(S);
 		}
 	}
-	else if (elementsAboveTOver2.empty()) // if no element 
-	{
-		find_largest_sum_elements_below(T, elementsBelowTOver2, M, S);
-	}
 	else
 	{
+		// largest sum might be an element above T/2, and sum of elements below T/2
 		std::sort(elementsAboveTOver2.begin(), elementsAboveTOver2.end());
 		for (int elementsCountAbove = elementsAboveTOver2.size(), iElementAbove = elementsCountAbove - 1; iElementAbove >= 0; --iElementAbove)
 		{
@@ -120,14 +97,29 @@ void Question2::find_largest_sum(uint32_t T, const std::vector<uint32_t>& I, std
 				return;
 			}
 		}
+		// if largest sum is below target, then largest sum might be the sum of elements below T/2
 		{
 			uint32_t currentSum = 0;
 			std::vector<uint32_t> currentSumElements;
-			find_largest_sum_elements_below(T, elementsBelowTOver2, currentSumElements, currentSum);
-			if (currentSum > S)
+			std::sort(elementsBelowTOver2.begin(), elementsBelowTOver2.end());
+			while (!elementsBelowTOver2.empty())
 			{
-				S = currentSum;
-				M = std::move(currentSumElements);
+				uint32_t elementBelow = elementsBelowTOver2.back();
+				elementsBelowTOver2.pop_back();
+				uint32_t currentSum = 0;
+				std::vector<uint32_t> currentSumElements;
+				find_largest_sum(T - elementBelow, elementsBelowTOver2, currentSumElements, currentSum);
+				currentSum += elementBelow;
+				currentSumElements.emplace_back(elementBelow);
+				if (currentSum > S)
+				{
+					S = currentSum;
+					M = std::move(currentSumElements);
+				}
+				if (currentSum == T)
+				{
+					return;
+				}
 			}
 		}
 	}
